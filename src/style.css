@@ -1,6 +1,43 @@
-.yo {
+body {
     margin: 0;
     padding: 0;
-    background-color: red;
     height: 100vh;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 3rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+}
+
+.projects {
+    padding-left: 10px;
+    width: 30%;
+    border: 1px solid green;
+    background-color: rgb(134, 56, 56);
+    box-shadow: 5px 5px 5px 5px rgb(192, 140, 140);
+}
+
+.items {
+    padding-left: 10px;
+    width: 40%;
+    border: 1px solid blue;
+    background-color: rgb(86, 206, 224);
+    box-shadow: 5px 5px 5px 5px rgb(9, 74, 84);
+}
+
+li {
+    list-style-type: none;
 }
