@@ -4,12 +4,15 @@ import Project from "./projectItem";
 
 export const DOMHandler = (function () {
 
+
     const addProject = (project) => {
         // save project to storage, to be done
         const projectsList = document.querySelector(".project-list");
         const li = document.createElement("li");
         li.textContent = project.name;
+        li.addEventListener("click", createItemsList.bind(null, project));
         projectsList.appendChild(li);
+        createItemsList(project);
     }
 
     const addNewProject = () => {
@@ -40,7 +43,7 @@ export const DOMHandler = (function () {
     projectInput.setAttribute("type", "text");
     const newProjectButton = document.createElement("button");
     newProjectButton.textContent = "Add Project";
-    newProjectButton.onclick = addNewProject;
+    newProjectButton.addEventListener("click", addNewProject);
     projectForm.appendChild(projectInput);
     projectForm.appendChild(newProjectButton);
     projectsDiv.append(projectForm);
@@ -58,8 +61,10 @@ export const DOMHandler = (function () {
         const ul = document.createElement("ul");
         ul.classList.add("project-list");
         for (let project of projects) {
+            console.log(project);
             const li = document.createElement("li");
             li.textContent = project.name;
+            li.addEventListener("click", createItemsList.bind(null, project));
             ul.append(li);
         }
 
@@ -67,7 +72,9 @@ export const DOMHandler = (function () {
     }
 
     const createItemsList = (project) => {
+        itemsDiv.replaceChildren(itemsHeading);
         itemsHeading.textContent = project.name;
+
         const ul = document.createElement("ul");
         for (let item of project.getItems()) {
             const li = document.createElement("li");
@@ -77,7 +84,6 @@ export const DOMHandler = (function () {
         itemsDiv.append(ul);
 
     }
-
 
     return {
         createProjectsList,
