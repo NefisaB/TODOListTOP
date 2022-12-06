@@ -14,6 +14,7 @@ h1 {
 
 h2 {
     font-size: 2rem;
+    text-transform: capitalize;
     padding-left: 10px;
 }
 
@@ -24,17 +25,39 @@ h2 {
 }
 
 .projects {
-    padding-left: 10px;
+    padding: 10px;
     width: 30%;
-    border: 1px solid green;
+    border-radius: 15px;
     background-color: rgb(134, 56, 56);
     box-shadow: 5px 5px 5px 5px rgb(192, 140, 140);
 }
 
+.projects input {
+    width: 50%;
+    height: 2rem;
+    font-size: 1.25rem;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.projects button {
+    display: block;
+    margin-top: 5px;
+    width: 50%;
+    height: 2rem;
+    padding: 5px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    border: none;
+}
+
 .items {
-    padding-left: 10px;
+    padding: 10px;
     width: 40%;
-    border: 1px solid blue;
+    border: none;
+    border-radius: 15px;
     background-color: rgb(86, 206, 224);
     box-shadow: 5px 5px 5px 5px rgb(9, 74, 84);
 }
