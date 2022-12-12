@@ -42,14 +42,14 @@ h2 {
     border: none;
 }
 
-.projects button {
+button {
     display: block;
     margin-top: 5px;
-    width: 50%;
     height: 2rem;
     padding: 5px 15px;
     font-size: 1rem;
     font-weight: 600;
+    text-transform: capitalize;
     border-radius: 5px;
     border: none;
 }
@@ -71,4 +71,26 @@ li {
     list-style-type: none;
     font-size: 1.5rem;
     margin-bottom: 10px;
+}
+
+form {
+    border: none;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border: none;
+    padding-left: 0;
+}
+
+fieldset:last-of-type {
+    flex-direction: row;
+    align-items: center;
+}
+
+label {
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
