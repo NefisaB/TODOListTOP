@@ -1,6 +1,7 @@
 import "./style.css";
 import Todo from "./todoItem";
 import Project from "./projectItem";
+import projects from "./projects";
 
 export const DOMHandler = (function () {
 
@@ -57,6 +58,92 @@ export const DOMHandler = (function () {
     itemsDiv.append(itemsHeading);
     content.append(itemsDiv);
 
+    function createNewTodoForm() {
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo-div");
+        const formHeading = document.createElement("h2");
+        formHeading.textContent = "add new todo";
+        todoDiv.append(formHeading);
+
+        const todoForm = document.createElement("form");
+        todoForm.setAttribute("onsubmit", "event.preventDefault()");
+
+        const titleFieldset = document.createElement("fieldset");
+        const titleLabel = document.createElement("label");
+        titleLabel.textContent = "title";
+        const titleInput = document.createElement("input");
+        titleInput.setAttribute("name", "title");
+        titleInput.setAttribute("type", "text");
+        titleFieldset.append(titleLabel);
+        titleFieldset.append(titleInput);
+        todoForm.append(titleFieldset);
+
+        const descriptionFieldset = document.createElement("fieldset");
+        const descLabel = document.createElement("label");
+        descLabel.textContent = "description";
+        const descInput = document.createElement("textarea");
+        descInput.setAttribute("name", "description");
+        descInput.setAttribute("rows", "5");
+        descriptionFieldset.append(descLabel);
+        descriptionFieldset.append(descInput);
+        todoForm.append(descriptionFieldset);
+
+        const dateFieldset = document.createElement("fieldset");
+        const dateLabel = document.createElement("label");
+        dateLabel.textContent = "due date";
+        const dateInput = document.createElement("input");
+        dateInput.setAttribute("name", "dueDate");
+        dateInput.setAttribute("type", "date");
+        dateFieldset.append(dateLabel);
+        dateFieldset.append(dateInput);
+        todoForm.append(dateFieldset);
+
+        const priorityFieldset = document.createElement("fieldset");
+        const priorLabel = document.createElement("label");
+        priorLabel.textContent = "high priority";
+        const priorInput = document.createElement("input");
+        priorInput.setAttribute("type", "checkbox");
+        priorInput.setAttribute("name", "priority");
+        priorityFieldset.append(priorInput);
+        priorityFieldset.append(priorLabel);
+        todoForm.append(priorityFieldset);
+
+        const addTodoBtn = document.createElement("button");
+        addTodoBtn.textContent = "add";
+        addTodoBtn.setAttribute("type", "submit");
+        addTodoBtn.addEventListener("click", addTodoToProject.bind(null, todoForm));
+
+        todoForm.append(addTodoBtn);
+        todoDiv.append(todoForm);
+        content.append(todoDiv);
+    }
+
+    // updating items on a project, to be implemented
+    const addItemToProject = (project, item) => {
+        projects.map(proj => {
+            if (proj.name === project) {
+                proj.items.push(item);
+                console.log("Successfully added item to project!");
+            }
+        });
+    }
+
+    const addTodoToProject = (form) => {
+        const newTodoItem = new Todo(form.title.value, form.description.value, form.dueDate.value, form.priority.checked);
+        const currentProject = itemsDiv.firstChild.textContent;
+        console.log(currentProject);
+        addItemToProject(currentProject, newTodoItem);
+        content.removeChild(content.children[2]);
+        addNewTodoToItemsList(newTodoItem);
+    }
+
+    const addNewTodoToItemsList = (item) => {
+        const ul = document.querySelector(".items-list");
+        const li = document.createElement("li");
+        li.textContent = item.title;
+        ul.append(li);
+    }
+
     const createProjectsList = (projects) => {
         const ul = document.createElement("ul");
         ul.classList.add("project-list");
@@ -72,16 +159,26 @@ export const DOMHandler = (function () {
     }
 
     const createItemsList = (project) => {
+        if (content.children[2]) {
+            content.removeChild(content.lastChild);
+        }
         itemsDiv.replaceChildren(itemsHeading);
         itemsHeading.textContent = project.name;
 
         const ul = document.createElement("ul");
+        ul.classList.add("items-list");
         for (let item of project.getItems()) {
             const li = document.createElement("li");
             li.textContent = item.title;
             ul.append(li);
         }
         itemsDiv.append(ul);
+
+        const addNewTodoBtn = document.createElement("button");
+        addNewTodoBtn.textContent = "add new todo";
+        addNewTodoBtn.addEventListener("click", createNewTodoForm);
+
+        itemsDiv.append(addNewTodoBtn);
 
     }
 
