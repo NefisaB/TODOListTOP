@@ -143,7 +143,6 @@ export const DOMHandler = (function () {
         const ul = document.createElement("ul");
         ul.classList.add("project-list");
         for (let project of projects) {
-            console.log(project);
             const li = document.createElement("li");
             li.textContent = project.name;
             li.addEventListener("click", createItemsList.bind(null, project));
@@ -159,8 +158,91 @@ export const DOMHandler = (function () {
         }
     }
 
+
+
     const updateTodoItem = (li) => {
-        console.log(li);
+
+        let tempItem, tempProject, tempIndex;
+
+        for (let proj of myProjectList) {
+            if (proj.name === document.querySelector(".items").firstChild.textContent) {
+
+                const index = proj.getItems().findIndex(i => i.title === li.firstChild.textContent);
+                tempItem = proj.getItems()[index];
+                tempProject = proj;
+                tempIndex = index;
+            }
+        }
+
+        document.querySelector("#new-todo-btn").disabled = true;
+        const todoDiv = document.createElement("div");
+        todoDiv.classList.add("todo-div");
+        const formHeading = document.createElement("h2");
+        formHeading.textContent = "update todo";
+        todoDiv.append(formHeading);
+
+        const todoForm = document.createElement("form");
+        todoForm.setAttribute("onsubmit", "event.preventDefault()");
+
+        const titleFieldset = document.createElement("fieldset");
+        const titleLabel = document.createElement("label");
+        titleLabel.textContent = "title";
+        const titleInput = document.createElement("input");
+        titleInput.setAttribute("name", "title");
+        titleInput.setAttribute("type", "text");
+        titleInput.setAttribute("value", tempItem.title);
+        titleFieldset.append(titleLabel, titleInput);
+        todoForm.append(titleFieldset);
+
+        const descriptionFieldset = document.createElement("fieldset");
+        const descLabel = document.createElement("label");
+        descLabel.textContent = "description";
+        const descInput = document.createElement("textarea");
+        descInput.setAttribute("name", "description");
+        descInput.setAttribute("rows", "5");
+        descInput.value = tempItem.description;
+        descriptionFieldset.append(descLabel, descInput);
+        todoForm.append(descriptionFieldset);
+
+        const dateFieldset = document.createElement("fieldset");
+        const dateLabel = document.createElement("label");
+        dateLabel.textContent = "due date";
+        const dateInput = document.createElement("input");
+        dateInput.setAttribute("name", "dueDate");
+        dateInput.setAttribute("type", "date");
+        dateInput.setAttribute("date", tempItem.dueDate);
+        dateFieldset.append(dateLabel, dateInput);
+        todoForm.append(dateFieldset);
+
+        const priorityFieldset = document.createElement("fieldset");
+        const priorLabel = document.createElement("label");
+        priorLabel.textContent = "high priority";
+        const priorInput = document.createElement("input");
+        priorInput.setAttribute("type", "checkbox");
+        priorInput.setAttribute("name", "priority");
+        priorityFieldset.append(priorInput, priorLabel);
+        todoForm.append(priorityFieldset);
+
+        const addTodoBtn = document.createElement("button");
+        addTodoBtn.textContent = "add";
+        addTodoBtn.setAttribute("type", "submit");
+        addTodoBtn.addEventListener("click", updateTodo.bind(null, todoForm, tempProject, tempIndex));
+
+        todoForm.append(addTodoBtn);
+        todoDiv.append(todoForm);
+        content.append(todoDiv);
+    }
+
+    const updateTodo = (form, proj, index) => {
+        document.querySelector("#new-todo-btn").disabled = true;
+        content.removeChild(content.children[2]);
+        const newTodoItem = new Todo(form.title.value, form.description.value, form.dueDate.value, form.priority.checked);
+        for (let p of myProjectList) {
+            if (p.name === proj.name) {
+                p.getItems().splice(index, 1, newTodoItem);
+            }
+        }
+        createItemsList(proj);
     }
 
     const deleteTodoItem = (li) => {
@@ -170,7 +252,6 @@ export const DOMHandler = (function () {
                 const index = proj.getItems().findIndex(i => i.title === li.firstChild.textContent);
                 proj.getItems().splice(index, 1);
             }
-            console.log(proj.getItems());
         }
     }
 
@@ -180,7 +261,6 @@ export const DOMHandler = (function () {
             if (proj.name === document.querySelector(".items").firstChild.textContent) {
                 const index = proj.getItems().findIndex(i => i.title === li.firstChild.textContent);
                 proj.getItems()[index].toggleIsDone();
-                console.log(proj.getItems()[index]);
             }
         }
     }
