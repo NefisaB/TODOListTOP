@@ -131,7 +131,6 @@ export const DOMHandler = (function () {
     const addTodoToProject = (form) => {
         const newTodoItem = new Todo(form.title.value, form.description.value, form.dueDate.value, form.priority.checked);
         const currentProject = itemsDiv.firstChild.textContent;
-        console.log(currentProject);
         addItemToProject(currentProject, newTodoItem);
         content.removeChild(content.children[2]);
         addNewTodoToItemsList(newTodoItem);
@@ -155,12 +154,20 @@ export const DOMHandler = (function () {
         projectsDiv.insertBefore(ul, projectForm);
     }
 
+    const showTodoDetails = (li) => {
+        const paragraphs = li.querySelectorAll("p");
+        for (let p of paragraphs) {
+            p.classList.toggle("hidden");
+        }
+    }
+
     const updateTodoItem = (li) => {
         console.log(li);
     }
 
     const deleteTodoItem = (li) => {
         document.querySelector(".items-list").removeChild(li);
+        // to implement - delete item from project in memory
     }
 
     const toggleDone = (li) => {
@@ -175,6 +182,7 @@ export const DOMHandler = (function () {
         const buttonsDiv = document.createElement("div");
         const btnDetails = document.createElement("button");
         btnDetails.textContent = "...";
+        btnDetails.addEventListener("click", showTodoDetails.bind(null, li));
         const btnEdit = document.createElement("button");
         btnEdit.textContent = "edit";
         btnEdit.addEventListener("click", updateTodoItem.bind(null, li));
@@ -185,7 +193,13 @@ export const DOMHandler = (function () {
         btnIsDone.setAttribute("type", "checkbox");
         btnIsDone.addEventListener("change", toggleDone.bind(null, li));
         buttonsDiv.append(btnDetails, btnEdit, btnDelete, btnIsDone);
-        li.append(liTitle, buttonsDiv);
+        const descPar = document.createElement("p");
+        descPar.textContent = item.description || "No description yet...";
+        descPar.classList.add("hidden");
+        const datePar = document.createElement("p");
+        datePar.textContent = `Due date: ${item.dueDate || "Whenever..."}`;
+        datePar.classList.add("hidden");
+        li.append(liTitle, buttonsDiv, descPar, datePar);
 
         return li;
     }

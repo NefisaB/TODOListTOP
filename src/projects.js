@@ -3,7 +3,7 @@ import Project from "./projectItem";
 
 const project1 = new Project("Blog");
 for (let i = 0; i < 5; i++) {
-    const item = new Todo("Blog item", "", "today", "low");
+    const item = new Todo(`${i} Blog item`, "Something anything some description of the prject, Something anything some description of the prject, Something anything some description of the prject, Something anything some description of the prject", "today", "low");
     project1.addItem(item);
 }
 
