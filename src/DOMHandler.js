@@ -139,9 +139,7 @@ export const DOMHandler = (function () {
 
     const addNewTodoToItemsList = (item) => {
         const ul = document.querySelector(".items-list");
-        const li = document.createElement("li");
-        li.textContent = item.title;
-        ul.append(li);
+        ul.append(createLi(item));
     }
 
     const createProjectsList = (projects) => {
@@ -154,8 +152,42 @@ export const DOMHandler = (function () {
             li.addEventListener("click", createItemsList.bind(null, project));
             ul.append(li);
         }
-
         projectsDiv.insertBefore(ul, projectForm);
+    }
+
+    const updateTodoItem = (li) => {
+        console.log(li);
+    }
+
+    const deleteTodoItem = (li) => {
+        document.querySelector(".items-list").removeChild(li);
+    }
+
+    const toggleDone = (li) => {
+        li.firstChild.classList.toggle("line-through");
+        // implement isDone to todo class
+    }
+
+    const createLi = (item) => {
+        const li = document.createElement("li");
+        const liTitle = document.createElement("span");
+        liTitle.textContent = item.title;
+        const buttonsDiv = document.createElement("div");
+        const btnDetails = document.createElement("button");
+        btnDetails.textContent = "...";
+        const btnEdit = document.createElement("button");
+        btnEdit.textContent = "edit";
+        btnEdit.addEventListener("click", updateTodoItem.bind(null, li));
+        const btnDelete = document.createElement("button");
+        btnDelete.textContent = "delete";
+        btnDelete.addEventListener("click", deleteTodoItem.bind(null, li));
+        const btnIsDone = document.createElement("input");
+        btnIsDone.setAttribute("type", "checkbox");
+        btnIsDone.addEventListener("change", toggleDone.bind(null, li));
+        buttonsDiv.append(btnDetails, btnEdit, btnDelete, btnIsDone);
+        li.append(liTitle, buttonsDiv);
+
+        return li;
     }
 
     const createItemsList = (project) => {
@@ -168,9 +200,7 @@ export const DOMHandler = (function () {
         const ul = document.createElement("ul");
         ul.classList.add("items-list");
         for (let item of project.getItems()) {
-            const li = document.createElement("li");
-            li.textContent = item.title;
-            ul.append(li);
+            ul.append(createLi(item));
         }
         itemsDiv.append(ul);
 
