@@ -3,11 +3,14 @@ import Todo from "./todoItem";
 import Project from "./projectItem";
 import projects from "./projects";
 
+const myProjectList = projects;
+
 export const DOMHandler = (function () {
 
 
     const addProject = (project) => {
         // save project to storage, to be done
+        myProjectList.push(project);
         const projectsList = document.querySelector(".project-list");
         const li = document.createElement("li");
         li.textContent = project.name;
@@ -59,6 +62,7 @@ export const DOMHandler = (function () {
     content.append(itemsDiv);
 
     function createNewTodoForm() {
+        document.querySelector("#new-todo-btn").disabled = true;
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo-div");
         const formHeading = document.createElement("h2");
@@ -74,8 +78,7 @@ export const DOMHandler = (function () {
         const titleInput = document.createElement("input");
         titleInput.setAttribute("name", "title");
         titleInput.setAttribute("type", "text");
-        titleFieldset.append(titleLabel);
-        titleFieldset.append(titleInput);
+        titleFieldset.append(titleLabel, titleInput);
         todoForm.append(titleFieldset);
 
         const descriptionFieldset = document.createElement("fieldset");
@@ -84,8 +87,7 @@ export const DOMHandler = (function () {
         const descInput = document.createElement("textarea");
         descInput.setAttribute("name", "description");
         descInput.setAttribute("rows", "5");
-        descriptionFieldset.append(descLabel);
-        descriptionFieldset.append(descInput);
+        descriptionFieldset.append(descLabel, descInput);
         todoForm.append(descriptionFieldset);
 
         const dateFieldset = document.createElement("fieldset");
@@ -94,8 +96,7 @@ export const DOMHandler = (function () {
         const dateInput = document.createElement("input");
         dateInput.setAttribute("name", "dueDate");
         dateInput.setAttribute("type", "date");
-        dateFieldset.append(dateLabel);
-        dateFieldset.append(dateInput);
+        dateFieldset.append(dateLabel, dateInput);
         todoForm.append(dateFieldset);
 
         const priorityFieldset = document.createElement("fieldset");
@@ -104,8 +105,7 @@ export const DOMHandler = (function () {
         const priorInput = document.createElement("input");
         priorInput.setAttribute("type", "checkbox");
         priorInput.setAttribute("name", "priority");
-        priorityFieldset.append(priorInput);
-        priorityFieldset.append(priorLabel);
+        priorityFieldset.append(priorInput, priorLabel);
         todoForm.append(priorityFieldset);
 
         const addTodoBtn = document.createElement("button");
@@ -120,7 +120,7 @@ export const DOMHandler = (function () {
 
     // updating items on a project, to be implemented
     const addItemToProject = (project, item) => {
-        projects.map(proj => {
+        myProjectList.map(proj => {
             if (proj.name === project) {
                 proj.items.push(item);
                 console.log("Successfully added item to project!");
@@ -129,6 +129,7 @@ export const DOMHandler = (function () {
     }
 
     const addTodoToProject = (form) => {
+        document.querySelector("#new-todo-btn").disabled = false;
         const newTodoItem = new Todo(form.title.value, form.description.value, form.dueDate.value, form.priority.checked);
         const currentProject = itemsDiv.firstChild.textContent;
         addItemToProject(currentProject, newTodoItem);
@@ -167,7 +168,13 @@ export const DOMHandler = (function () {
 
     const deleteTodoItem = (li) => {
         document.querySelector(".items-list").removeChild(li);
-        // to implement - delete item from project in memory
+        for (let proj of myProjectList) {
+            if (proj.name === document.querySelector(".items").firstChild.textContent) {
+                const index = proj.getItems().findIndex(i => i.title === li.firstChild.textContent);
+                proj.getItems().splice(index, 1);
+            }
+            console.log(proj.getItems());
+        }
     }
 
     const toggleDone = (li) => {
@@ -220,6 +227,7 @@ export const DOMHandler = (function () {
 
         const addNewTodoBtn = document.createElement("button");
         addNewTodoBtn.textContent = "add new todo";
+        addNewTodoBtn.setAttribute("id", "new-todo-btn");
         addNewTodoBtn.addEventListener("click", createNewTodoForm);
 
         itemsDiv.append(addNewTodoBtn);

@@ -82,6 +82,7 @@ li>span {
 }
 
 .line-through {
+    color: red;
     text-decoration: line-through;
 }
 
