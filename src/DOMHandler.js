@@ -7,7 +7,6 @@ const myProjectList = projects;
 
 export const DOMHandler = (function () {
 
-
     const addProject = (project) => {
         // save project to storage, to be done
         myProjectList.push(project);
@@ -118,12 +117,10 @@ export const DOMHandler = (function () {
         content.append(todoDiv);
     }
 
-    // updating items on a project, to be implemented
     const addItemToProject = (project, item) => {
         myProjectList.map(proj => {
             if (proj.name === project) {
-                proj.items.push(item);
-                console.log("Successfully added item to project!");
+                proj.getItems().push(item);
             }
         });
     }
@@ -179,7 +176,13 @@ export const DOMHandler = (function () {
 
     const toggleDone = (li) => {
         li.firstChild.classList.toggle("line-through");
-        // implement isDone to todo class
+        for (let proj of myProjectList) {
+            if (proj.name === document.querySelector(".items").firstChild.textContent) {
+                const index = proj.getItems().findIndex(i => i.title === li.firstChild.textContent);
+                proj.getItems()[index].toggleIsDone();
+                console.log(proj.getItems()[index]);
+            }
+        }
     }
 
     const createLi = (item) => {
@@ -199,6 +202,10 @@ export const DOMHandler = (function () {
         const btnIsDone = document.createElement("input");
         btnIsDone.setAttribute("type", "checkbox");
         btnIsDone.addEventListener("change", toggleDone.bind(null, li));
+        if (item.isDone) {
+            liTitle.classList.add("line-through");
+            btnIsDone.checked = true;
+        }
         buttonsDiv.append(btnDetails, btnEdit, btnDelete, btnIsDone);
         const descPar = document.createElement("p");
         descPar.textContent = item.description || "No description yet...";
